@@ -18,7 +18,8 @@ pipeline {
           sh '''
             npm --version || echo "npm not found"
             npm install
-            ng build --configuration production
+            npm install @angular/cli@19
+            npx ng build --configuration production
           '''
         }
       }
