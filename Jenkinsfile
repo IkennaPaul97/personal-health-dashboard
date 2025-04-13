@@ -1,7 +1,10 @@
 pipeline {
   agent any
+  tools {
+    nodejs "Node22"
+  }
   environment {
-    PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
+    PATH = "/var/jenkins_home/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/Node22/bin:$PATH"
   }
   stages {
     stage('Checkout') {
@@ -12,33 +15,39 @@ pipeline {
     stage('Build Frontend') {
       steps {
         dir('frontend') {
-          sh 'npm install'
-          sh 'ng build --configuration production'
+          sh '''
+            npm --version || echo "npm not found"
+            npm install
+            ng build --configuration production
+          '''
         }
       }
     }
     stage('Test Backend') {
       steps {
         dir('backend') {
-          sh 'npm install'
-          sh 'npm run test'
+          sh '''
+            npm --version || echo "npm not found"
+            npm install
+            npm run test
+          '''
         }
       }
     }
     stage('Build Docker Images') {
       steps {
-        sh 'docker compose -f docker/docker-compose.yml build'
+        sh 'docker-compose -f docker/docker-compose.yml build'
       }
     }
     stage('Run Containers') {
       steps {
-        sh 'docker compose -f docker/docker-compose.yml up -d'
+        sh 'docker-compose -f docker/docker-compose.yml up -d'
       }
     }
   }
   post {
     always {
-      sh 'docker compose -f docker/docker-compose.yml down || true'
+      sh 'docker-compose -f docker/docker-compose.yml down || true'
     }
   }
 }
