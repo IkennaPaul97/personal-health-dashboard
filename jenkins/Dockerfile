@@ -4,5 +4,6 @@ RUN apt-get update && \
     apt-get install -y docker.io && \
     curl -L "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
+    usermod -aG docker jenkins && \
     apt-get clean
 USER jenkins
