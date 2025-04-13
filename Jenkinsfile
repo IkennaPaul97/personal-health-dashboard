@@ -37,18 +37,18 @@ pipeline {
     }
     stage('Build Docker Images') {
       steps {
-        sh 'docker compose -f docker/docker-compose.yml build'
+        sh 'docker-compose -f docker/docker-compose.yml build'
       }
     }
     stage('Run Containers') {
       steps {
-        sh 'docker compose -f docker/docker-compose.yml up -d'
+        sh 'docker-compose -f docker/docker-compose.yml up -d'
       }
     }
   }
   post {
     always {
-      sh 'docker compose -f docker/docker-compose.yml down || true'
+      sh 'docker-compose -f docker/docker-compose.yml down || true'
     }
   }
 }
